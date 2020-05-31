@@ -1,0 +1,189 @@
+openapi: '3.0.2'
+info:
+  title: Movie Database
+  version: '1.0'
+servers:
+  - url: https://localhost:9999/v1
+paths:
+  /company/{companyId}:
+    get:
+      description: Get the details about a Production Company
+      parameters:
+        - name: companyId
+          in: path
+          description: Production Company ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: year
+          in: query
+          description: Calendar Year
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Production Company Details
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/Company"
+  /genre:
+    get:
+      description: Get the details about a movie Genre
+      parameters:
+        - name: genreId
+          in: query
+          description: Genre ID
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: genreName
+          in: query
+          description: Genre Name
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/Genres"
+components:
+  schemas:
+    Company:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        budgetByYear:
+          type: array
+          items:
+            type: object
+            properties:
+              year:
+                type: number
+                format: int32
+              budget:
+                type: number
+                format: int64
+        revenueByYear:
+          type: array
+          items:
+            type: object
+            properties:
+              year:
+                type: number
+                format: int32
+              revenue:
+                type: number
+                format: int64
+        profitByYear:
+          type: array
+          items:
+            type: object
+            properties:
+              year:
+                type: number
+                format: int32
+              profit:
+                type: number
+                format: int64
+        releasesByGenre:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              name:
+                type: string
+              releasesPerYear:
+                type: number
+                format: int32
+        avgPopularityPerYear:
+          type: array
+          items:
+            type: object
+            properties:
+              year:
+                type: number
+                format: int32
+              avgPopularity:
+                type: number
+                format: int32
+    Genre:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        budgetPerYear:
+          type: array
+          items:
+            type: object
+            properties:
+              year:
+                type: number
+                format: int32
+              budget:
+                type: number
+                format: int64
+        revenuePerYear:
+          type: array
+          items:
+            type: object
+            properties:
+              year:
+                type: number
+                format: int32
+              budget:
+                type: number
+                format: int64
+        profitPerYear:
+          type: array
+          items:
+            type: object
+            properties:
+              year:
+                type: number
+                format: int32
+              budget:
+                type: number
+                format: int64
+    Genres:
+      type: object
+      properties:
+        genres:
+          type: array
+          items:
+           $ref: "#/components/schemas/Genre"
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
